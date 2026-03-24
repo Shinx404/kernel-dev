@@ -30,7 +30,7 @@ char * kitoa(int n, int base){
 		}
 	}
 	else if(base == 16){
-		while(n != 0 || n =/= 'x'){
+		while(n != 0){
                         rem = n % 16;
                         n /= 16;
                         string[i] = (rem-10) + 'a';
@@ -55,8 +55,8 @@ char * kitoa(int n, int base){
 		}
 	}
 	else if(base == 16){
-		res[0] = '0'
-		res[1] = 'x'
+		res[0] = '0';
+		res[1] = 'x';
 		for(int j = 0; j < len; j++){
                                 res[j + 2] = string[len - j - 1];
                         }
@@ -75,19 +75,21 @@ void kprintf(char *str_literal,...){
 			switch(str_literal[i + 1]) {
 				case('d'):
 					int num = va_arg(vars, int);
-					char *res = kitoa(num);
-				        vga[vgap] = str[j];	
-					vga[vgap + 1] = 0x07;
+					char *res = kitoa(num,10);
+				        for(int j = 0; j < kstrlen(res);j++){
+						vga[vgap + j] = res[j];	
+						vga[vgap + 1 + j] = 0x07;
+					}
 					break;
 				case('s'):
-					char str[] = va_arg(args, char *);
+					char *str = va_arg(vars, char *);
 					for(int j = 0; j < kstrlen(str); j++){
 						vga[vgap + j] = str[j];
 						vga[vgap + 1 + j] = 0x07;
 					}
 					break;
 				case('c'):
-					vga[vgap] = va_arg(args, char);
+					vga[vgap] = (char)va_arg(vars, int);
 					vga[vgap + 1] = 0x07;
 					break;
 
