@@ -13,55 +13,46 @@ int kstrlen(char *buf){
 	return counter;
 }
 
-char * kitoa(int n, int base){
-	char string[32] = "";
-	int rem;
-	int i = 0;
-	int isNegative = 0;
-	if(n < 0){
-		isNegative = 1;
-	}
-	if(base == 10){
-		while(n != 0){
-			rem = n % 10;
-			n /= 10;
-			string[i] = rem + '0';
-			i++;
-		}
-	}
-	else if(base == 16){
-		while(n != 0){
-                        rem = n % 16;
-                        n /= 16;
-                        string[i] = (rem-10) + 'a';
-                        i++;
-                }
-	
-	}
+void reverse(char str[], int length)
+{
+    	int start = 0;
+    	int end = length - 1;
+    	while (start < end) {
+        	char temp = str[start];
+        	str[start] = str[end];
+        	str[end] = temp;
+        	end--;
+        	start++;
+    	}
+}
 
-	int len = kstrlen(string);
-	
-	if(base == 10){
-		if(isNegative == 1){
-			res[0] = '-';
-			for(int j = 0; j < len; j++){
-                		res[j + 1] = string[len - j - 1]; 
-        		}
-		}
-		else{
-			for(int j = 0; j < len; j++){
-				res[j] = string[len - j - 1];
-			}
-		}
-	}
-	else if(base == 16){
-		res[0] = '0';
-		res[1] = 'x';
-		for(int j = 0; j < len; j++){
-                                res[j + 2] = string[len - j - 1];
-                        }
-	}
-	return res;
+char * kitoa(int num, int base){
+	int i = 0;
+    	int isNegative = 0;
+    	
+	if (num == 0) {
+        	res[i++] = '0';
+        	res[i] = '\0';
+        	return res;
+    	}
+
+    	if (num < 0 && base == 10) {
+        	isNegative = 1;
+        	num = -num;
+    	}
+    	while (num != 0) {
+        	int rem = num % base;
+        	res[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        	num = num / base;
+    	}
+    	if (isNegative == 1)
+        	res[i++] = '-';
+
+   		res[i] = '\0';
+
+    	reverse(res, i);
+
+    	return res;
 }
 
 void kprintf(char *str_literal,...){
@@ -92,6 +83,14 @@ void kprintf(char *str_literal,...){
 					vga[vgap] = (char)va_arg(vars, int);
 					vga[vgap + 1] = 0x07;
 					break;
+				case('x'):
+					int hex = va_arg(vars, int);
+                                        char *res = kitoa(num,10);
+                                        for(int j = 0; j < kstrlen(res);j++){
+                                                vga[vgap + j] = res[j];
+                                                vga[vgap + 1 + j] = 0x07;
+                                        }
+                                        break;
 
 			}
 		}

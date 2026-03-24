@@ -13,67 +13,46 @@ int kstrlen(char *buf){
 	return counter;
 }
 
-char * kitoa(int n, int base){
-	char string[32] = "";
-	int rem;
+void reverse(char str[], int length)
+{
+    	int start = 0;
+    	int end = length - 1;
+    	while (start < end) {
+        	char temp = str[start];
+        	str[start] = str[end];
+        	str[end] = temp;
+        	end--;
+        	start++;
+    	}
+}
+
+char * kitoa(int num, int base){
 	int i = 0;
-	int isNegative = 0;
+    	int isNegative = 0;
+    	
+	if (num == 0) {
+        	res[i++] = '0';
+        	res[i] = '\0';
+        	return res;
+    	}
 
-	if(n < 0){
-		isNegative = 1;
-	}
-	if(n == 0){
-		res[i] = '0';
-		res[i++];
-		return res;	
-	}
-	if(base == 10){
-		if(isNegative == 1){
-                                n * -1;
-                }
-		while(n != 0){
-			rem = n % 10;
-			n /= 10;
-			string[i] = rem + '0';
-			i++;
-		}
-	}
-	else if(base == 16){
-		if(isNegative == 1){
-			n * -0x1;
-		}
-		while(n != 0){
-                        rem = n % 16;
-                        n /= 16;
-                        string[i] = (rem-10) + 'a';
-                        i++;
-                }
-	
-	}
+    	if (num < 0 && base == 10) {
+        	isNegative = 1;
+        	num = -num;
+    	}
+    	while (num != 0) {
+        	int rem = num % base;
+        	res[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        	num = num / base;
+    	}
+    	if (isNegative == 1)
+        	res[i++] = '-';
 
-	int len = kstrlen(string);
-	
-	if(base == 10){
-		if(isNegative == 1){
-			string[i++] = '-';
-			for(int j = 0; j < len; j++){
-                		res[j] = string[len - j - 1]; 
-        		}
-		}
-		else{
-			for(int j = 0; j < len; j++){
-				res[j] = string[len - j - 1];
-			}
-		}
-	}
-	else if(base == 16){
-		res[0] = '0';
-		res[1] = 'x';
-		for(int j = 0; j < len; j++){
-                                res[j + 2] = string[len - j - 1];
-                        }
-	}
-	return res;
+   	 	res[i] = '\0';
+
+    	reverse(res, i);
+
+    	return res;
 }
 
 void kprintf(char *str_literal,...){
@@ -86,8 +65,8 @@ void kprintf(char *str_literal,...){
 			va_start(vars,str_literal);
 			switch(str_literal[i + 1]) {
 				case('d'):
-					int num = va_arg(vars, int);
-					char *dec = kitoa(num,10);
+					int decn = va_arg(vars, int);
+					char *dec = kitoa(decn,10);
 				        write(1,dec,kstrlen(dec));
 					i++;
 					break;
@@ -101,6 +80,12 @@ void kprintf(char *str_literal,...){
 					write(1,c, 1);
 					i++;
 					break;
+				case('x'):
+					int hexn = va_arg(vars, int);
+                                        char *hex = kitoa(hexn,16);
+                                        write(1,hex,kstrlen(hex));
+                                        i++;
+                                        break;
 
 			}
 		}
@@ -115,7 +100,7 @@ int main(void){
 	kprintf("hello world %d\n", 45);
 	kprintf("hi %s\n", "red");
 	kprintf("negative: %d\n", -54);
-	kprintf("hex: %x\n", 200);
+	kprintf("hex: %x\n", 0x100);
 	return 0;
 	
 }
