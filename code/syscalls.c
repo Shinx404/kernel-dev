@@ -102,7 +102,7 @@ void kprintf(char *str_literal,...){
 	}
 }
 
-int main(void){
+int kernel_main(void){
 	kprintf("hello world %d", 123);
 	return 0;
 }
