@@ -85,9 +85,9 @@ void kprintf(char *str_literal,...){
 					break;
 				case('x'):
 					int hex = va_arg(vars, int);
-                                        char *res = kitoa(num,10);
-                                        for(int j = 0; j < kstrlen(res);j++){
-                                                vga[vgap + j] = res[j];
+                                        char *resx = kitoa(hex,16);
+                                        for(int j = 0; j < kstrlen(resx);j++){
+                                                vga[vgap + j] = resx[j];
                                                 vga[vgap + 1 + j] = 0x07;
                                         }
                                         break;
