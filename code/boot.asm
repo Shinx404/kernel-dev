@@ -1,7 +1,5 @@
-GLOBAL start
-EXTERN kernel_main
 BITS 16
-
+ORG 0x7C00
 
 start:
 	jmp boot
@@ -55,4 +53,5 @@ protected_mode:
 	MOV gs, ax
 	MOV byte [0xB8000], 'A'
 	MOV byte [0xB8001], 0x07
+	jmp $
 
